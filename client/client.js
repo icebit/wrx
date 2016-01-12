@@ -1,13 +1,23 @@
+/*
+*client.js
+*This is the actual client-side game.
+*/
+
+//Keycode constants
+var ENTER = 13;
+
 //Canvas variables
-var canvas;
+var canvas = document.getElementById("ctx");;
 var ctx; //Canvas context (2D)
 
 var socket; //Reference to Socket.IO
 
-//Initialize game
+//Initialize Socket.IO
+socket = io();
+
+//Initialize game (called by login.js)
 function init(){
 	//Canvas
-	canvas = document.getElementById("ctx");
 	resize(); //Set initial dimensions
 
 	ctx = canvas.getContext("2d");
@@ -18,9 +28,6 @@ function init(){
 		update();
 		render();
 	}, canvas);
-
-	//Initialize Socket.IO
-	socket = io();
 }
 
 //Main update function
@@ -40,6 +47,3 @@ function resize(){
 }
 
 window.onresize = resize;
-
-/*<<<START GAME>>>*/
-init();

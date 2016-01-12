@@ -1,8 +1,8 @@
 {
   "name": "wrx",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "An online shooter with circles",
-  "main": "server/server.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

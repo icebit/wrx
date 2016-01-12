@@ -1,0 +1,21 @@
+body{
+	margin:0;
+	padding:0;
+}
+
+#form{
+	margin:0;
+	padding:20px;
+}
+
+button, input{
+	background-color: #2199ff;
+	border: 0;
+	font-size: 2em;
+	font-family: sans-serif;
+	max-width: 500px;
+	width: 100%;
+	height: auto;
+	display: block;
+	color: #141313;
+}

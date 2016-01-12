@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html>
 	<body>
-		<canvas id = "ctx"></canvas>
+		<div id="form">
+			<input id="username">
+			<button id="join-button">Join</button>
+		</div>
+		<div id="game">
+			<canvas id="ctx"></canvas>
+		</div>
 	</body>
 	<script src="/socket.io/socket.io.js"></script>
-	<script type="text/javascript" src="client.js"></script>
+	<script src="client.js"></script>
+	<script src="login.js"></script>
 </html>
