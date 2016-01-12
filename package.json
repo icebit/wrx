@@ -1,0 +1,24 @@
+{
+  "name": "wrx",
+  "version": "1.0.0",
+  "description": "An online shooter with circles",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/icebit/wrx.git"
+  },
+  "author": "icebit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/icebit/wrx/issues"
+  },
+  "homepage": "https://github.com/icebit/wrx#readme",
+  "dependencies": {
+    "chipmunk": "^6.1.1",
+    "express": "^4.13.3",
+    "socket.io": "^1.4.4"
+  }
+}
