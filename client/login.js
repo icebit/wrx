@@ -21,5 +21,31 @@ function handleSubmit(event){
 
 function login(){
 	var username = document.getElementById("username").value;
-	console.log("Logging in...");
+	socket.emit("login", username);
+
+	//Handle response
+
+	//Login failed
+	socket.on("loginError", function(id){
+		if(id == 0){
+			console.log("No username");
+		}
+		if(id == 1){
+			console.log("Name taken");
+		}
+		if(id == 2){
+			console.log("Name too long");
+		}
+	});
+
+	//Login successful! Yay!
+	socket.on("loginSuccess", function(){
+		console.log("Login successful!");
+		startGame();
+	});
+}
+
+function startGame(){
+	//Disable login
+	window.removeEventListener("keydown", handleSubmit);
 }
