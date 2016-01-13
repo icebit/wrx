@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http); 
+var uuid = require("node-uuid");
 
 //Constants
 var VERSION = "0.1.0";
@@ -27,6 +28,7 @@ io.on("connection", function(client){
 	//Handle login
 	var username;
 	var player;
+	var id;
 	client.on("login", function(un){
 		username = un;
 		/*
@@ -44,17 +46,16 @@ io.on("connection", function(client){
 			return;
 		}
 		for(i = 0; i < clients.length; i++){
-			console.log(clients[i].username);
-			//cmdLog(clients[i].username);
-			//cmdLog(username);
-			//if(clients[i].username == username){
-			//	client.emit("loginError", 1);
-			//}
-			//cmdLog("taken");
-			//return;
+			if(clients[i].username == username){
+				client.emit("loginError", 1);
+				return;
+			}
 		}
+		//Generate UUID
+		id = uuid();
+		cmdLog(id);
 		//Login accepted! Add client to list
-		player = new Client(client, username);
+		player = new Client(client, username, id);
 
 		clients.push(player);
 
@@ -62,25 +63,25 @@ io.on("connection", function(client){
 		client.emit("loginSuccess");
 
 		cmdLog(username + " joined");
-		console.log(clients);
 	});
 
 	//Handle disconnection
 	client.on("disconnect", function(){
 		for(i = 0; i < clients.length; i++){
-			if(clients[i].username == username){
+			if(clients[i].id == id){
 				clients.pop(i);
+				cmdLog(username + " left");
+				break;
+				return;
 			}
 		}
-		cmdLog(username + " left");
-		console.log(clients);
-		return;
 	});
 });
 
-var Client = function(socket, username){
+var Client = function(socket, username, id){
 	this.socket = socket;
 	this.username = username;
+	this.id = id;
 };
 
 //<---Command line--->
