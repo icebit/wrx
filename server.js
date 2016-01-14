@@ -53,7 +53,6 @@ io.on("connection", function(client){
 		}
 		//Generate UUID
 		id = uuid();
-		cmdLog(id);
 		//Login accepted! Add client to list
 		player = new Client(client, username, id);
 
