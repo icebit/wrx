@@ -4,7 +4,8 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http); 
 var uuid = require("node-uuid");
 
-var cp = require("chipmunk");
+var fs = require("fs");
+var config;
 
 //Aliases
 
@@ -21,12 +22,8 @@ app.use("/", express.static(__dirname + "/client"));
 function init(){
 	console.log("<~~~ Wrx server v" + VERSION + " ~~~>");
 
-	//Setup chipmunk physics
-	var gravity = cp.v(0, -100);
-	
-	var space = new cp.Space();
-	//cp.spaceSetGravity(space, gravity);
-	var ground = new cp.SegmentShape();
+	//Load config file
+	config
 	
 	//Listen
 	http.listen(PORT, function(){
@@ -104,5 +101,8 @@ function cmdRead(){
 
 }
 
+function loadMap(){
+
+}
 //Start the server!
 init();
