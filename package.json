@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/icebit/wrx#readme",
   "dependencies": {
-    "chipmunk": "^6.1.1",
     "express": "^4.13.3",
     "node-uuid": "^1.4.7",
     "socket.io": "^1.4.4"

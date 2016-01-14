@@ -4,6 +4,10 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http); 
 var uuid = require("node-uuid");
 
+var cp = require("chipmunk");
+
+//Aliases
+
 //Constants
 var VERSION = "0.1.0";
 var PORT = 7010;
@@ -17,6 +21,13 @@ app.use("/", express.static(__dirname + "/client"));
 function init(){
 	console.log("<~~~ Wrx server v" + VERSION + " ~~~>");
 
+	//Setup chipmunk physics
+	var gravity = cp.v(0, -100);
+	
+	var space = new cp.Space();
+	//cp.spaceSetGravity(space, gravity);
+	var ground = new cp.SegmentShape();
+	
 	//Listen
 	http.listen(PORT, function(){
 		cmdLog("Now listening on port " + PORT);
@@ -53,6 +64,7 @@ io.on("connection", function(client){
 		}
 		//Generate UUID
 		id = uuid();
+		cmdLog(id);
 		//Login accepted! Add client to list
 		player = new Client(client, username, id);
 
