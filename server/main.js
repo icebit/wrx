@@ -6,24 +6,31 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http); 
 var uuid = require("node-uuid");
 var fs = require("fs");
-var matter = require("matter-js");
+var Matter = require("matter-js");
 //Internal dependencies
 
 var playerjs = require("./player.js");
 
 //Aliases
-var Client = playerjs.Client;
-var Player = playerjs.Player;
+var Client = playerjs.Client,
+	Player = playerjs.Player;
 
+var Engine = Matter.Engine,
+    World = Matter.World,
+    Body = Matter.Body,
+    Bodies = Matter.Bodies,
+    Common = Matter.Common,
+    Constraint = Matter.Constraint,
+    Composites = Matter.Composites;
+
+//Globals
 var config;
 
 var engine;
 var delta;
 
-//Aliases
-
 //Constants
-var VERSION = "0.1.0";
+var VERSION = "0.1.2";
 
 //Global list of players
 var players = [];
@@ -32,16 +39,22 @@ var players = [];
 app.use("/", express.static(__dirname + "/../client"));
 
 function init(){
+	//Load config file
+	config = JSON.parse(fs.readFileSync(__dirname + "/../config.json", "utf8", function(err){
+		if(err){
+			cmdLog("config.json not fonud");
+		}
+	}));
+
 	console.log("<~~~ Wrx server v" + VERSION + " ~~~>");
 
-	//Load config file
-	config = JSON.parse(fs.readFileSync(__dirname + "/../config.json"));
-
 	//Initialize physics
-	engine = matter.Engine.create();
+	engine = Engine.create();
+	engine.world.gravity.x = 0;
+	engine.world.gravity.y = 1;
 
 	//Load map
-	loadMap(config.defaultMap);
+	loadMap(config.defaultMap, engine.world);
 
 	//Start game loop
 	delta = 1000/config.updateFps;
@@ -55,7 +68,7 @@ function init(){
 
 function update(){
 	//Step physics
-	matter.Engine.update(engine, delta);
+	Engine.update(engine, delta);
 }
 
 //Network handlers
@@ -127,9 +140,19 @@ function cmdRead(){
 
 }
 
-function loadMap(mapName){
+function loadMap(mapName, world){
 	var map = JSON.parse(fs.readFileSync(__dirname + mapName));
-	cmdLog("Loading map '" + map.name + "'");
+	cmdLog("Loading map " + map.name + ": " + map.description);
+
+	var wallOptions = {
+		isStatic: true
+	};
+
+	for (var i = 0; i < map.collision.length; i++) {
+		for (var j = 0; j < map.collision[i].length; j++) {
+			console.log(map.collision[i][j]);
+		}
+	}
 }
 //Start the server!
 init();

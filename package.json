@@ -1,6 +1,6 @@
 {
   "name": "wrx",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "An online shooter with circles",
   "main": "server/main.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "url": "git+ssh://git@github.com/icebit/wrx.git"
   },
   "author": "icebit",
-  "license": "MIT",
+  "license": "Apache 2.0",
   "bugs": {
     "url": "https://github.com/icebit/wrx/issues"
   },
