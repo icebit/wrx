@@ -1,0 +1,12 @@
+{
+	"name":"Divided",
+	"description":"Two gravity fields",
+	"visual":{
+
+	},
+	"collision":{
+		"border":[
+			{"x":"-100", "y":"100"}
+		]
+	}
+}
