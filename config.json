@@ -3,5 +3,6 @@
 	"port":7010,
     "maxPlayers":16,
     "defaultMap":"/maps/divided.json",
-    "updateFps":60
+    "updateFps":60,
+    "packetFps":20
 }

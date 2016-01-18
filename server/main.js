@@ -29,11 +29,14 @@ var config;
 var engine;
 var delta;
 
+var visualMap;
+
+//Global list of clients
+var clients = [];
+
 //Constants
 var VERSION = "0.1.2";
 
-//Global list of players
-var players = [];
 
 //Serve static html
 app.use("/", express.static(__dirname + "/../client"));
@@ -60,6 +63,8 @@ function init(){
 	delta = 1000/config.updateFps;
 	setInterval(update, delta);
 
+	//Start packet loop
+	setInterval(sendPacket, 1000/config.packetFps);
 	//Listen
 	http.listen(config.port, function(){
 		cmdLog("Now listening on port " + config.port);
@@ -69,6 +74,14 @@ function init(){
 function update(){
 	//Step physics
 	Engine.update(engine, delta);
+}
+
+function sendPacket(){
+	var packet = makePacket();
+	//Send packet to all clients
+	for(i = 0; i < clients.length; i++){
+		clients[i].socket.emit("update", packet);
+	}
 }
 
 //Network handlers
@@ -84,9 +97,9 @@ io.on("connection", function(client){
 		*0 = No username entered
 		*1 = Username taken
 		*2 = Username too long ( > 18 chars)
-        *3 = Max players
+        *3 = Max clients
 		*/
-        if(players.length >= config.maxPlayers){
+        if(clients.length >= config.maxclients){
         	client.emit("loginError", 3);
         	return;
         }
@@ -98,19 +111,22 @@ io.on("connection", function(client){
 			client.emit("loginError", 2);
 			return;
 		}
-		for(i = 0; i < players.length; i++){
-			if(players[i].username == username){
+		for(i = 0; i < clients.length; i++){
+			if(clients[i].username == username){
 				client.emit("loginError", 1);
 				return;
 			}
 		}
+		//Spawn player
+		var player = new Player();
+
 		//Generate UUID
 		id = uuid();
 		
 		//Login accepted! Add client to list
-		player = new Client(client, username, id);
+		newClient = new Client(client, username, id, player);
 
-		players.push(player);
+		clients.push(newClient);
 
 		//Notify player
 		client.emit("loginSuccess");
@@ -120,9 +136,9 @@ io.on("connection", function(client){
 
 	//Handle disconnection
 	client.on("disconnect", function(){
-		for(i = 0; i < players.length; i++){
-			if(players[i].id == id){
-				players.pop(i);
+		for(i = 0; i < clients.length; i++){
+			if(clients[i].id == id){
+				clients.pop(i);
 				cmdLog(username + " left");
 				break;
 				return;
@@ -144,6 +160,8 @@ function loadMap(mapName, world){
 	var map = JSON.parse(fs.readFileSync(__dirname + mapName));
 	cmdLog("Loading map " + map.name + ": " + map.description);
 
+	visualMap = map.visual;
+
 	var wallOptions = {
 		isStatic: true
 	};
@@ -154,5 +172,17 @@ function loadMap(mapName, world){
 		}
 	}
 }
+
+function makePacket(){
+	var players = [];
+	for(i = 0; i < clients.length; i++){
+		players.push(clients[i].player);
+	}
+	var packet = {
+		"players":players
+	}
+	return packet;
+}
+
 //Start the server!
 init();

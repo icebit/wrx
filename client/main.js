@@ -15,6 +15,11 @@ var socket; //Reference to Socket.IO
 //Initialize Socket.IO
 socket = io();
 
+//Network handlers
+socket.on("update", function(data){
+	console.log(data);
+});
+
 //Initialize game (called by login.js)
 function init(){
 	//Canvas
